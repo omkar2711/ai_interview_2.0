@@ -181,6 +181,7 @@ const AddQuestions = () => {
                       placeholder="Ex. 5"
                       value={jobExperience}
                       max="50"
+                      min="0"
                       type="number"
                       required
                       onChange={handleInputChange(setJobExperience)}
@@ -195,7 +196,7 @@ const AddQuestions = () => {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={loading}>
+                  <Button type="submit" disabled={loading} className="lex-1 bg-[#e62d3c] text-white px-4 py-2 rounded-lg hover:bg-[#d41e2d] transition-colors">
                     {loading ? (
                       <>
                         <LoaderCircle className="animate-spin" />

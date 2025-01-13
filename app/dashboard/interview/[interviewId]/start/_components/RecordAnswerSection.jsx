@@ -31,6 +31,8 @@ const RecordAnswerSection = ({
   const [followUpCount, setFollowUpCount] = useState(0);
   const router = useRouter();
 
+  const MIN_WORD_COUNT = 20;
+
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
   useEffect(() => {
@@ -103,6 +105,13 @@ const RecordAnswerSection = ({
   };
 
   const updateUserAnswer = async () => {
+
+    const wordCount = userAnswer.trim().split(/\s+/).length;
+    if (wordCount < MIN_WORD_COUNT) {
+      toast(`Your answer is too short. Please provide at least ${MIN_WORD_COUNT} words.`);
+      return;
+    }
+
     try {
       if (followUpCount >= 4) {
         // Redirect to the feedback page if the follow-up count exceeds 4
@@ -113,7 +122,7 @@ const RecordAnswerSection = ({
       setLoading(true);
       const feedbackPrompt =
         followUpCount < 4
-          ? `Question: ${mockInterviewQuestion.Question}, User Answer: ${userAnswer}, Please give us a rating for the answer, feedback for improvement, and generate 1 follow-up question in JSON format with fields {"followUpQuestion": "", "feedback": "", "rating": ""}.`
+          ? `Question: ${mockInterviewQuestion.Question}, User Answer: ${userAnswer}, Please give us a rating for the answer, feedback for improvement, and generate 1 easy follow-up question in JSON format with fields {"followUpQuestion": "", "feedback": "", "rating": ""}. do not make the questions hard`
           : `Question: ${mockInterviewQuestion.Question}, User Answer: ${userAnswer}, Please give a rating for the answer and feedback for improvement in JSON format with fields {"feedback": "", "rating": ""}.`;
 
       const result = await chatSession.sendMessage(feedbackPrompt);

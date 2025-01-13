@@ -72,6 +72,11 @@ const predefinedRoles = {
     "Experienced in driving online sales and optimizing the user experience for e-commerce platforms. Skilled in inventory management, marketing strategies, and tools like Shopify or WooCommerce.",
 };
 
+const predefinedDifficulties = {
+  "Easy": "Basic questions that test fundamental knowledge and skills.",
+  "Medium": "Intermediate questions that require problem-solving and critical thinking.",
+  "Hard": "Advanced questions that challenge expertise and experience.",
+};
 
 
 const AddNewInterview = () => {
@@ -80,6 +85,7 @@ const AddNewInterview = () => {
   const [jobPosition, setJobPosition] = useState("");
   const [jobDesc, setJobDesc] = useState("");
   const [jobExperience, setJobExperience] = useState("");
+  const [difficultyLevel, setDifficultyLevel] = useState("");
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
   const { user } = useUser();
@@ -97,6 +103,11 @@ const AddNewInterview = () => {
     setJobDesc(predefinedRoles[selectedRole] || "");
   };
 
+  const handleDifficultyChange = (e) => {
+    const difficultyLevel = e.target.value;
+    setDifficultyLevel(difficultyLevel);
+  };
+
   const onSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -104,7 +115,8 @@ const AddNewInterview = () => {
     const InputPrompt = `
   Job Positions: ${jobPosition}, 
   Job Description: ${jobDesc}, 
-  Years of Experience: ${jobExperience}. 
+  Years of Experience: ${jobExperience}.
+  Difficulty Level: ${difficultyLevel}. All the questions should be of the same level of difficulty. 
   Based on this information, please provide 1 interview question with an answer in JSON format, ensuring "Question" and "Answer" are fields in the JSON. The format should be 
   {
     "Question": "",
@@ -233,6 +245,22 @@ const AddNewInterview = () => {
                       onChange={(e) => setJobExperience(e.target.value)}
                     />
                   </div>
+                  <label className="text-black">Difficulty Level</label>
+                  <select
+                          className="mt-1 p-2 border rounded w-full"
+                          required
+                          value={difficultyLevel}
+                          onChange={handleDifficultyChange}
+                        >
+                          <option value="" disabled>
+                            Select difficulty level
+                          </option>
+                          {Object.keys(predefinedDifficulties).map((d) => (
+                            <option key={d} value={d}>
+                              {d}
+                            </option>
+                          ))}
+                        </select>
                 </div>
                 <div className="flex gap-5 justify-end">
                   <Button
